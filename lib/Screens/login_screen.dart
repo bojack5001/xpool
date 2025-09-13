@@ -1,10 +1,15 @@
 import 'package:email_validator/email_validator.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:xpool/Screens/forgot_password_screen.dart';
+import 'package:xpool/Screens/register_screen.dart';
 
-import '../global/gobal.dart';
+import '../global/global.dart';
+
+import '../splashScreen/splash_screen.dart';
 import 'main_screen.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -31,13 +36,45 @@ class _LoginScreenState extends State<LoginScreen> {
           email: emailTextEditingController.text.trim(),
           password:passwordTextEditingController.text.trim()
       ).then((auth) async{
-        currentUser = auth.user;
+        DatabaseReference userRef = FirebaseDatabase.instance.ref().child("users");
+        userRef.child(firebaseAuth.currentUser!.uid).once().then((value) async {
+          final snap = value.snapshot;
+          if(snap.value !=null) {
+            currentUser = auth.user;
+            await Fluttertoast.showToast(msg: "Successfully Logged In");
+            Navigator.push(context, MaterialPageRoute(builder: (c) => MainScreen()));
+          }
+          else {
+            await Fluttertoast.showToast(msg: "No record exist with this email");
+            firebaseAuth.signOut();
+            Navigator.push(context, MaterialPageRoute(builder: (c) => splashscreen()));
+          }
+        });
+      }).catchError((error) {
+        String errorMessage = "An error occurred";
 
-        await Fluttertoast.showToast(msg: "Successfully Logged In");
-        Navigator.push(context, MaterialPageRoute(builder: (c) => MainScreen()));
-      }).catchError((errorMessage) {
-        Fluttertoast.showToast(msg: "Error occured: \n $errorMessage");
+        if (error is FirebaseAuthException) {
+          switch (error.code) {
+            case "invalid-email":
+              errorMessage = "The email address is badly formatted.";
+              break;
+            case "user-not-found":
+              errorMessage = "No user found with this email.";
+              break;
+            case "wrong-password":
+              errorMessage = "Incorrect password.";
+              break;
+            case "user-disabled":
+              errorMessage = "This user account has been disabled.";
+              break;
+            default:
+              errorMessage = "Error: ${error.message}";
+          }
+        }
+
+        Fluttertoast.showToast(msg: errorMessage);
       });
+
     }
     else{
       Fluttertoast.showToast(msg: "Not al field are valid");
@@ -60,7 +97,7 @@ class _LoginScreenState extends State<LoginScreen> {
           children: [
             Column(
               children: [
-                Image.asset(darkTheme ? 'images/xpool_1_dark.jpg' : 'images/xpool_1.jpg'),
+                Image.asset(darkTheme ? 'images/xpool_login.jpg' : 'images/xpool_login.jpg'),
 
                 SizedBox(height: 20,),
 
@@ -233,6 +270,8 @@ class _LoginScreenState extends State<LoginScreen> {
 
                                 GestureDetector(
                                   onTap:(){
+                                    Navigator.push(context, MaterialPageRoute(builder: (c) => RegisterScreen()));
+
                                   },
                                   child: Text(
                                     "Register",

@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:xpool/Screens/login_screen.dart';
-import 'package:xpool/global/gobal.dart';
+import 'package:xpool/global/global.dart';
 
 
 class ForgotPasswordScreen extends StatefulWidget {
@@ -45,7 +45,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
           children: [
             Column(
               children: [
-                Image.asset(darkTheme ? 'images/xpool_1_dark.jpg' : 'images/xpool_1.jpg'),
+                Image.asset(darkTheme ? 'images/xpool_login.jpg' : 'images/xpool_login.jpg'),
 
                 SizedBox(height: 20,),
 

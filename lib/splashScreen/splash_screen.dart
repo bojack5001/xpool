@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:xpool/Assistants/assitants_methods.dart';
 import 'package:xpool/Screens/login_screen.dart';
 import 'package:xpool/Screens/main_screen.dart';
-import 'package:xpool/global/gobal.dart';
+import 'package:xpool/global/global.dart';
 
 class splashscreen extends StatefulWidget {
   const splashscreen({super.key});

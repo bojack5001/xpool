@@ -7,13 +7,13 @@ import 'package:xpool/models/directions.dart';
 import 'package:xpool/models/predicted_places.dart';
 import 'package:xpool/widgets/progress_dialog.dart';
 
-import '../global/gobal.dart';
+import '../global/global.dart';
 
 class PlacePredictionTileDesign extends StatefulWidget {
 
   final PredictedPlaces? predictedPlaces;
 
-   PlacePredictionTileDesign({this.predictedPlaces});
+  PlacePredictionTileDesign({this.predictedPlaces});
 
   @override
   State<PlacePredictionTileDesign> createState() => _PlacePredictionTileDesignState();
@@ -52,7 +52,7 @@ class _PlacePredictionTileDesignState extends State<PlacePredictionTileDesign> {
         userDropOffAddress = directions.locationName!;
       });
 
-      Navigator.pop(context, "obtainedDropoff");
+      Navigator.pop(context, "obtainedDropOff"); // Capital O
     }
   }
 
@@ -63,7 +63,9 @@ class _PlacePredictionTileDesignState extends State<PlacePredictionTileDesign> {
 
     return ElevatedButton(
       onPressed: () {
-        getPlaceDirectionDetails(widget.predictedPlaces!.place_id, context);
+        if (widget.predictedPlaces?.place_id != null) {
+          getPlaceDirectionDetails(widget.predictedPlaces!.place_id, context);
+        }
       },
       style: ElevatedButton.styleFrom(
         backgroundColor: darkTheme ? Colors.black : Colors.white,

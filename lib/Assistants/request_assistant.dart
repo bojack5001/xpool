@@ -9,7 +9,7 @@ class RequestAssistant {
 
     try{
       if (httpsResponse.statusCode == 200) //successful
-      {
+          {
         String responseData = httpsResponse.body; //json
         var decodeResponseData = jsonDecode(responseData);
 

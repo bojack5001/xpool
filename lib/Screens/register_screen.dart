@@ -4,8 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl_phone_field/intl_phone_field.dart';
+import 'package:xpool/Screens/forgot_password_screen.dart';
+import 'package:xpool/Screens/login_screen.dart';
 import 'package:xpool/Screens/main_screen.dart';
-import 'package:xpool/global/gobal.dart';
+import 'package:xpool/global/global.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
@@ -76,7 +78,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
         children: [
           Column(
             children: [
-              Image.asset(darkTheme ? 'images/xpool_1_dark.jpg' : 'images/xpool_1.jpg'),
+              Image.asset(darkTheme ? 'images/xpool_login.jpg' : 'images/xpool_login.jpg'),
               
               SizedBox(height: 20,),
               
@@ -380,7 +382,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           SizedBox(height: 10,),
 
                           GestureDetector(
-                            onTap: () {},
+                            onTap: () {
+                              Navigator.push(context, MaterialPageRoute(builder: (c) => ForgotPasswordScreen()));
+                            },
                             child: Text(
                               'Forgot Password?',
                               style: TextStyle(
@@ -406,6 +410,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
                               GestureDetector(
                                 onTap:(){
+                                  Navigator.push(context, MaterialPageRoute(builder: (c) => LoginScreen()));
                                 },
                                 child: Text(
                                   "sign In",
