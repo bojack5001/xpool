@@ -1,6 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:xpool/Screens/rate_driver_screen.dart';
 import 'package:xpool/Screens/register_screen.dart';
 import 'package:xpool/infoHandler/app_info.dart';
 import 'package:xpool/splashScreen/splash_screen.dart';

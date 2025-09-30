@@ -164,7 +164,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             },
             icon: Icon(
               Icons.arrow_back_ios,
-              color: Colors.black,
+              color: Colors.white,
             ),
           ),
           title: Text("Profile Screen", style: TextStyle( fontWeight: FontWeight.bold),),
@@ -267,14 +267,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-
-
               ],
             ),
           ),
         ),
       ),
-
     );
   }
 }

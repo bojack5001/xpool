@@ -4,6 +4,7 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:xpool/Assistants/request_assistant.dart';
+import 'package:xpool/models/trips_history_model.dart';
 import 'package:xpool/models/user_model.dart';
 import 'package:geolocator/geolocator.dart';
 
@@ -63,10 +64,6 @@ class AssistantMethods {
     String urlOriginToDestinationDirectionDetails = "https://maps.googleapis.com/maps/api/directions/json?origin=${originPosition.latitude},${originPosition.longitude}&destination=${destinationPosition.latitude},${destinationPosition.longitude}&key=$mapKey";
     var responseDirectionApi = await RequestAssistant.receiveRequest(urlOriginToDestinationDirectionDetails);
 
-    // if (responseDirectionApi == "Error Occured. Failed. No Response.") {
-    //   return "";
-    // }
-
     DirectionDetailsInfo directionDetailsInfo = DirectionDetailsInfo();
 
     directionDetailsInfo.e_points = responseDirectionApi["routes"][0]["overview_polyline"]["points"];
@@ -122,6 +119,50 @@ class AssistantMethods {
       headers: headerNotification,
       body: jsonEncode(officialNotificationFormat),
     );
+  }
+
+  //retrieve the trips Keys online user
+  //trip key = ride request key
+  static void readTripsKeysForOnlineUser(context){
+    FirebaseDatabase.instance.ref().child("All Ride Requests").orderByChild("userName").equalTo(userModelCurrentInfo!.name).once().then((snap){
+      if(snap.snapshot.value !=null){
+        Map KeysTripsId = snap.snapshot.value as Map;
+
+        //count total number of trips and share it with Provider
+        int overAllTripsCounter = KeysTripsId.length;
+        Provider.of<AppInfo>(context, listen: false).updateOverAllTripsCounter(overAllTripsCounter);
+
+        //share trips keys with Provider
+        List<String> tripsKeysList = [];
+        KeysTripsId.forEach((key, value) {
+          tripsKeysList.add(key);
+        });
+        Provider.of<AppInfo>(context, listen: false).updateOverAllTripsKeys(tripsKeysList);
+
+        //get trips keys data - read trips complete information
+        readTripsHistoryInformation(context);
+      }
+    });
+  }
+
+  static void readTripsHistoryInformation(context){
+    var tripsAllKeys = Provider.of<AppInfo>(context, listen: false).historyTripsKeysList;
+
+    for(String eachKey in tripsAllKeys){
+      FirebaseDatabase.instance.ref()
+          .child("All Ride Requests")
+          .child(eachKey)
+          .once()
+          .then((snap)
+      {
+        var eachTripHistory = TripsHistoryModel.fromSnapshot(snap.snapshot);
+
+        if((snap.snapshot.value as Map)["status"] == "ended"){
+          //update or add each history to OverAllTrips History data list
+          Provider.of<AppInfo>(context, listen: false).updateOverAllTripsHistoryInformation(eachTripHistory);
+        }
+      });
+    }
   }
 
 }
